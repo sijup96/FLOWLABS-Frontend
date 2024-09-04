@@ -1,5 +1,5 @@
 import React from 'react'
-import BrowseHeader from '../../../components/BrowseHeader'
+import BrowseHeader from '../../components/BrowseHeader'
 
 const Pricing = () => {
   return (

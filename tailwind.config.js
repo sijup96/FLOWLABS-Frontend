@@ -3,8 +3,17 @@ export default {
   content: ["./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",],
   theme: {
-    extend: {},
+    extend: {
+      'gray-custom':'#7D8DA5',
+      'gray-dark':'#30363F'
+    },
+    backgroundImage:{
+      'gradient-gray':'linear-gradient(to bottom, #30363F, #7D8DA5)'
+    }
   },
-  plugins: [],
+  plugins: [
+    //...
+    require('@tailwindcss/forms'),
+  ],
 }
 

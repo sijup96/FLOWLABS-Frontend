@@ -1,0 +1,1 @@
+export const BROWSE_URL= 'http://localhost:4000/'
