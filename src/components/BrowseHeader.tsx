@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const BrowseHeader = () => {
-  const navigate = useNavigate(); // Corrected variable name
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
 const toggleMenu = () => {
@@ -11,7 +11,7 @@ const toggleMenu = () => {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    navigate('/signUp'); // Corrected variable name
+    navigate('/signUp'); 
   };
 
   return (

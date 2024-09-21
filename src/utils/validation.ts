@@ -1,4 +1,8 @@
 export const fieldValidation = {
+    name: (name: string) => {
+        const nameRegex = /^[A-Za-z]{3,15}$/;
+        return nameRegex.test(name.trim()) ? true : false;
+    },
     firstName: (firstName: string) => {
         const firstNameRegex = /^[A-Za-z]{3,15}$/;
         return firstNameRegex.test(firstName.trim()) ? true : false;
@@ -6,6 +10,10 @@ export const fieldValidation = {
     lastName: (lastName: string) => {
         const lastNameRegex = /^[A-Za-z]{1,15}$/;
         return lastNameRegex.test(lastName.trim()) ? true : false;
+    },
+    industry: (industry: string) => {
+        const industryRegex = /^[A-Za-z]{3,15}$/;
+        return industryRegex.test(industry.trim()) ? true : false;
     },
     phone: (phone: number) => {
         const phoneRegex = /^\d{10}$/;

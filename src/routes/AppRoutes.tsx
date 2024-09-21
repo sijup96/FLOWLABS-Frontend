@@ -1,14 +1,13 @@
-import React from 'react'
 import {Route, Routes } from 'react-router-dom'
-import Home from '../screens/browse/Home'
-import Pricing from '../screens/browse/Pricing'
-import SignUp from '../screens/browse/SignUp'
+import CompanyRoutes from './CompanyRoutes'
+import AdminRoutes from './AdminRoutes'
+import BrowseRoutes from './BrowseRoutes'
 const AppRoutes = () => {
     return(
     <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/price' element={<Pricing/>}/>
-        <Route path='/signUp' element={<SignUp/>}/>
+        <Route path='/company' element={<CompanyRoutes/>}/>
+        <Route path='/admin' element={<AdminRoutes/>}/>
+        <Route path='/*' element={<BrowseRoutes/>}/>
     </Routes>
     )
 }
