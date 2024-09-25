@@ -4,7 +4,7 @@ const CompanyLogin = () => {
   return (
     <div>
       <div>
-        sdkjfhsdlkjfgh
+        sdkj
         </div> 
     </div>
   )

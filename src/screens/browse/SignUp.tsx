@@ -1,13 +1,12 @@
 import BrowseHeader from '../../components/BrowseHeader'
 import React, { useEffect, useState } from 'react'
-import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
-import { BROWSE_URL } from '../../utils/constants';
 import { Toaster, toast } from 'react-hot-toast';
 import { fieldValidation } from '../../utils/validation';
-import { FaCheckCircle } from 'react-icons/fa';
 import { Button } from "@/components/ui/button"
 import axios from 'axios';
 import { useGoogleLogin } from '@react-oauth/google';
+import { Icons } from '@/components/ui/Icons';
+import user from '@/api/services/user.service';
 
 const SignUp = () => {
     // const [countryCode, setCountryCode] = useState('');
@@ -46,61 +45,23 @@ const SignUp = () => {
         setShowPassword(!showPassword);
     };
     // Send OTP
-    const handleVerify = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleVerify = async (e: React.MouseEvent<HTMLButtonElement | HTMLParagraphElement>) => {
         e.preventDefault();
         const isValid = fieldValidation.email(userInfo.email)
         if (!isValid) {
             toast.error('Enter a valid email')
             return
         }
-        const data = {
-            email: userInfo.email
-        }
-        const url = BROWSE_URL + 'otp'
         try {
-            const response = await axios.post(url, data)
-            if (response.statusText === 'OK') {
-                toast.success('OTP sent to your email')
-                setOtpInput(true)
-                setOtpTimer(30)
+            toast.success('Please wait...')
+            await user.verifyEmail({ email: userInfo.email })
+            toast.success('OTP sent to your email')
+            setOtpInput(true)
+            setOtpTimer(30)
+            if (isOtpResendAllowed)
                 setIsOtpResendAllowed(false)
-            } else {
-                toast.error('Something went wrong. Try again..')
-            }
         } catch (error) {
-            toast.error('Network error. Try again..')
-            console.log(error);
-
-        }
-    }
-
-    const handleResendOTP = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (!isOtpResendAllowed) {
-            toast.error('Please wait before resending OTP');
-            return;
-        }
-        const isValid = fieldValidation.email(userInfo.email);
-        if (!isValid) {
-            toast.error('Enter a valid email')
-            return
-        }
-        const data = {
-            email: userInfo.email
-        }
-        const url = BROWSE_URL + 'otp'
-        try {
-            const response = await axios.post(url, data)
-            if (response.statusText === 'OK') {
-                toast.success('OTP has been resend to your registered email')
-                setOtpInput(true)
-                setOtpTimer(30);
-                setIsOtpResendAllowed(false);
-            } else {
-                toast.error('Something went wrong. Try again..')
-            }
-        } catch (error) {
-            toast.error('Network error. Try again..')
+            toast.error('Something went wrong. Try again..')
             console.log(error);
 
         }
@@ -139,14 +100,11 @@ const SignUp = () => {
         e.preventDefault()
         const isValid = !error.companyNameError && !error.phoneError && userInfo.industry !== '' && !error.emailError && !error.passwordError;
         if (!isValid) return
-        const url = BROWSE_URL + 'signUp'
         const data = { ...userInfo }
         try {
-            const response = await axios.post(url, data)
-            if (response.statusText === 'OK') {
-                console.log('success');
-                setIsSignedUp(true)
-            }
+            await user.signUp(data)
+            setIsSignedUp(true)
+
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 const errors = err.response?.data.errors;
@@ -167,17 +125,39 @@ const SignUp = () => {
 
     }
     const googleLogin = useGoogleLogin({
-        onSuccess: (tokenResponse) => {
-            console.log('Google login success:', tokenResponse);
-            // You can redirect the user or handle token here
+        onSuccess: async (tokenResponse) => {
+            if (tokenResponse) {
+                const data = { ...userInfo, tokenResponse }
+                try {
+                    await user.googleAuth(data)
+                    setIsSignedUp(true)
+
+                } catch (err) {
+                    if (axios.isAxiosError(err)) {
+                        const errors = err.response?.data.errors;
+                        if (errors) {
+                            Object.keys(errors).forEach((key) => {
+                                setError((prevError) => ({
+                                    ...prevError,
+                                    [`${key}`]: errors[key]
+                                }));
+                            });
+                            console.log(error);
+
+                        }
+                    } else {
+                        console.error('Unexpected error', error);
+                    }
+                }
+            }
         },
         onError: (errorResponse) => {
             console.log('Google login failed:', errorResponse);
             toast.error('Google login failed');
         },
     });
-    
-    const handleGoogleAuth = async(e: React.MouseEvent<HTMLButtonElement>) => {
+
+    const handleGoogleAuth = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         let isValid = true;
 
@@ -213,10 +193,8 @@ const SignUp = () => {
         });
 
         setError(prevState => ({ ...prevState, ...newErrorState }));
-
-        console.log(isValid);
         if (!isValid) return;
-         googleLogin()
+        googleLogin()
     };
 
 
@@ -327,7 +305,7 @@ const SignUp = () => {
                                     onClick={togglePasswordVisibility}
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-900 text-xl"
                                 >
-                                    {showPassword ? <IoEyeSharp /> : <IoEyeOffSharp />}
+                                    {showPassword ? <Icons.eye /> : <Icons.eyeOff />}
                                 </button>
                             </div>
                             {error.passwordError && <span className='text-red-600 font-bold text-sm'>{error.passwordError}</span>}
@@ -351,7 +329,7 @@ const SignUp = () => {
                                     ) : (
                                         <p
                                             className='ml-1 cursor-pointer text-blue-300'
-                                            onClick={handleResendOTP}
+                                            onClick={handleVerify}
                                         >
                                             Resend OTP
                                         </p>
@@ -394,11 +372,11 @@ const SignUp = () => {
                             </svg>
                             Sign up with Google
                         </Button>
-                        
+
                     </form>
                 </div>) : (
                     <div className="flex flex-col items-center justify-center p-6 border border-gray-300 rounded-lg w-80 mx-auto bg-gray-600">
-                        <div className='p-4'><FaCheckCircle className="text-green-500 w-16 h-16 " />
+                        <div className='p-4'><Icons.checkCircle className="text-green-500 w-16 h-16 " />
                         </div>
                         <h2 className="text-xl font-semibold mb-4 text-center">
                             Your Flow Labs account has been successfully created!
