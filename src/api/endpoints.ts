@@ -1,7 +1,8 @@
 export const adminEndpoints={
     login:'admin/login',
     logout:'admin/logout',
-    users:'admin/users',
+    userRequests:'admin/userRequests',
+    approvelRequests:'admin/approvelRequest'
 }
 
 export const userEndPoints={
@@ -9,4 +10,11 @@ export const userEndPoints={
     signUp:'signUp',
     googleAuth:'googleAuth'
 
+}
+export  const companyEndPoints={
+    login:(domain:string)=>`/${domain}/login`,
+    resetPassword:(domain:string)=>`/${domain}/resetPassword`,
+}
+export const tokenEndPoits={
+refreshToken:'/refreshToken',
 }

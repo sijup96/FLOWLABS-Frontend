@@ -54,4 +54,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
-export { Button, buttonVariants }
+const Button2: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ className, ...props }) => {
+  return (
+    <button
+      className={`px-4 py-2 bg-gray-700 text-white rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ${className}`}
+      {...props}
+    />
+  )
+}
+
+
+
+export { Button,Button2, buttonVariants }
