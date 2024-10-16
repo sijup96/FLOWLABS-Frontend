@@ -1,15 +1,15 @@
 
-interface AdminProtectedRouteProps {
-    children: React.ReactNode;
-  }
+// interface AdminProtectedRouteProps {
+//     children: React.ReactNode;
+//   }
 
-const AdminProtectedRoute = ({children}:AdminProtectedRouteProps) => {
+// const AdminProtectedRoute = ({children}:AdminProtectedRouteProps) => {
     
-  return (
-    <div>
+//   return (
+//     <div>
       
-    </div>
-  )
-}
+//     </div>
+//   )
+// }
 
-export default AdminProtectedRoute
+// export default AdminProtectedRoute

@@ -104,6 +104,7 @@ const SignUp = () => {
     if (!isValid) return;
     const data = { ...userInfo };
     try {
+      toast.success("Please wait...");
       await user.signUp(data);
       setIsSignedUp(true);
     } catch (err) {

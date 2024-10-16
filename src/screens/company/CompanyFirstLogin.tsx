@@ -2,16 +2,18 @@ import { useState } from "react";
 import { Button2 } from "@/components/ui/button";
 import { Input2 } from "@/components/ui/Input";
 import { Label2 } from "@/components/ui/Label";
+import { Toaster, toast } from "react-hot-toast";
 import React from "react";
 import { fieldValidation } from "@/utils/validation";
 import { company } from "@/api/services/company.service";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CompanyFirstLogin = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { domainName } = useParams<{ domainName: string }>();
+  const navigete=useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,12 +30,12 @@ const CompanyFirstLogin = () => {
       setError("Passwords do not match");
       return;
     }
-
-    const response = await company.resetPassword({
+    toast.success("Please wait...");
+     await company.resetPassword({
       password: password,
       domainName: domainName || "",
     });
-    console.log(response);
+    navigete(`/c/${domainName}/home`)
   };
 
   return (
@@ -85,6 +87,7 @@ const CompanyFirstLogin = () => {
           </Button2>
         </form>
       </div>
+      <Toaster position="top-center" />
     </div>
   );
 };

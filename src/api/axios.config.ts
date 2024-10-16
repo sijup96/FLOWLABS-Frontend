@@ -1,7 +1,6 @@
 import { BASE_URL } from "@/utils/constants";
 import axios from "axios";
 import { tokenEndPoits } from "./endpoints";
-
 const axiosReq = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
@@ -22,25 +21,37 @@ axiosReq.interceptors.request.use(
 axiosReq.interceptors.response.use(
   (response) => response,
   async (error) => {
+    if (error.response.status === 403) {
+      const pathSegments = window.location.pathname.split("/");
+      const domainName = pathSegments[2];
+      const currentPath = window.location.pathname;
+      const loginPath = `/c/${domainName}/login`;
+      if (currentPath !== loginPath) {
+        if (error.response.data.message === "adminTokenError")
+          window.location.href = "/admin/login";
+        if (error.response.data.message === "hrTokenError") {
+          window.location.href = loginPath;
+        }
+      }
+    }
     const originalRequest = error.config;
-
-    // If the error is due to token expiration
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
+      let errorMessage;
+      let tokenPath = "";
       try {
+        errorMessage = error.response.data.errors.message;
+
+        // Set getToken path
+        if (errorMessage === "adminAccessTokenError")
+          tokenPath = tokenEndPoits.getAdminAccessToken;
+        if (errorMessage === "hrAccessTokenError")
+          tokenPath = tokenEndPoits.getHrAccessToken;
+        if (errorMessage === "employeeAccessTokenError")
+          tokenPath = tokenEndPoits.getEmployeeAccessToken;
+
         // Call the refresh token endpoint
-        const { data } = await axiosReq.post(
-          tokenEndPoits.refreshToken,
-          {},
-          { withCredentials: true }
-        );
-
-        // Set the new access token in headers for the original request
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${data.accessToken}`;
-
+        await axiosReq.post(tokenPath, {}, { withCredentials: true });
         // Retry the original request with the new token
         return axiosReq(originalRequest);
       } catch (err) {

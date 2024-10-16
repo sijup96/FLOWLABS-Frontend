@@ -2,6 +2,7 @@
 import AdminLayout from "@/components/admin/AdminLayout";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import AdminLogin from "@/screens/admin/AdminLogin";
+import NotFound from "@/screens/NotFound";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
@@ -32,6 +33,8 @@ const AdminRoutes = () => {
         />
         <Route path="/users" element={<AdminRequests />} />
       </Route>
+      <Route path='*' element={<NotFound/>}/>
+
     </Routes>
   );
 };

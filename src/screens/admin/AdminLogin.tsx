@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import admin from "@/api/services/admin.service";
+import axiosReq from "@/api/axios.config";
+import { tokenEndPoits } from "@/api/endpoints";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -10,6 +12,14 @@ const AdminLogin = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const checkIsLoggedIn=async ()=>{
+    const response=await axiosReq.post(tokenEndPoits.getAdminAccessToken)
+    if(response.status===200)
+      navigate('/admin')
+  }
+  useEffect(()=>{
+    checkIsLoggedIn()
+  },[])
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredential((prev) => ({ ...prev, [name]: value }));

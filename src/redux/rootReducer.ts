@@ -1,9 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
+import companyReducer from './slices/companySlice'
 // import authReducer from './features/auth/authSlice';
 
+
 const rootReducer = combineReducers({
-//   auth: authReducer,
-  // Add other reducers here
+company:companyReducer,
 });
 
 export default rootReducer;

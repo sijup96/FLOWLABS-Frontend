@@ -12,25 +12,20 @@ const CompanyLogin = () => {
   const [password, setPassword] = useState("");
   const { domainName } = useParams<{ domainName: string }>();
   const [error, setError] = useState("");
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!domainName) return;
     try {
-     const response= await company.login({ email, password, domainName });
+      const response = await company.login({ email, password, domainName });
 
-     if(response.isFirstTime)
-      navigate(`/c/${domainName}/isFirstTime`)
-    else
-    navigate('/home')
+      if (response.isFirstTime) navigate(`/c/${domainName}/isFirstTime`);
+      else navigate(`/c/${domainName}/home`);
     } catch (error) {
-      console.log(error)
-      setError('error');
-
+      console.log(error);
+      setError("error");
     }
-
-
   };
 
   return (
@@ -53,7 +48,10 @@ const CompanyLogin = () => {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
               className="mt-1 bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500"
               placeholder="you@example.com"
               required
@@ -67,13 +65,18 @@ const CompanyLogin = () => {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
               className="mt-1 bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500"
               placeholder="••••••••"
               required
             />
           </div>
-          <div className="text-red-600 text-center">{error?'Ivalid Credentials':''}</div>
+          <div className="text-red-600 text-center">
+            {error ? "Ivalid Credentials" : ""}
+          </div>
           <Button
             type="submit"
             className="w-full bg-gray-700 text-gray-100 hover:bg-gray-600 transition-all duration-300"

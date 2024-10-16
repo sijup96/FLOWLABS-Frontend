@@ -8,7 +8,7 @@ const AdminLayout = () => {
             <AdminHeader />
             <div className="flex">
             <AdminSidebar />
-            <main><Outlet /></main>
+            <main className=" w-full"><Outlet /></main>
             </div>
         </>)
 }
