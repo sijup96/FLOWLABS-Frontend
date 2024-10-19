@@ -1,6 +1,8 @@
 import { company } from "@/api/services/company.service";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
+// Define the interface for CompanyState
 export interface CompanyState {
   data: {
     companyName: string;
@@ -23,26 +25,31 @@ export interface CompanyState {
   loading: boolean;
   error: string | null;
 }
+
 // Initial state
 export const initialState: CompanyState = {
   data: null,
   loading: false,
   error: null,
 };
+
 // Action to fetch company data
 export const fetchCompanyData = createAsyncThunk(
-  '/c/:domainName/profile',
+  'company/fetchCompanyData',
   async (_, { rejectWithValue }) => {
     try {
       const data = await company.getCompanyInfo();
-      console.log('companySlice',data)
-      return data;
+      return data.companyData
     } catch (error) {
-      console.log(error);
-      return rejectWithValue("Failed to fetch company data");
+      // Handle Axios error
+      if (error instanceof AxiosError && error.response) {
+        return rejectWithValue(error.response.data.message || "Failed to fetch company data");
+      }
+      return rejectWithValue("An unknown error occurred");
     }
   }
 );
+
 // Create Slice
 const companySlice = createSlice({
   name: "company",
@@ -53,7 +60,7 @@ const companySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch company data
+    // Handle the different states of fetchCompanyData
     builder.addCase(fetchCompanyData.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -72,7 +79,6 @@ const companySlice = createSlice({
         state.error = action.payload as string | null;
       }
     );
-
   },
 });
 

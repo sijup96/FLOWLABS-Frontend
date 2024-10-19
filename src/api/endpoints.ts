@@ -24,6 +24,10 @@ export const companyEndPoints = {
   getCompanyInfo: "/company/getCompanyInfo",
   updateCompany: "/company/updateCompany",
   updateCompanylogo: "/company/updateLogo",
+  addDepartment: "/company/addDepartment",
+  getAllDepartmets: "company/getAllDepartments",
+  getDepartmentInfo: "company/getDepartmentInfo",
+  updateDepartment: "/company/updateDepartment",
 };
 export const employeeEndPoints = {
   add: "employee/add",

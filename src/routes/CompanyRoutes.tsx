@@ -11,8 +11,10 @@ import CreateNewProject from "@/screens/company/CreateNewProject";
 import DomainProvider from "@/context/DomainProvider";
 import Departments from "@/screens/company/Departments";
 import Employees from "@/screens/company/Employees";
+import DepartmentEdit from "@/screens/company/DepartmentEdit";
 
 const CompanyRoutes = () => {
+
   return(
     <DomainProvider>
       <Routes>
@@ -22,9 +24,12 @@ const CompanyRoutes = () => {
           <Route element={<HrProtectedRoute />}>
             <Route path="/home" element={<CompanyHome />} />
             <Route path="/profile" element={<CompanyProfile />} />
+
             <Route path="/projects" element={<Projects />} />
             <Route path="/project/create" element={<CreateNewProject />} />
+
             <Route path="/departments" element={<Departments />} />
+            <Route path="/departments/:id/edit" element={<DepartmentEdit />} />
             <Route path="/employees" element={<Employees />} />
           </Route>
         </Route>

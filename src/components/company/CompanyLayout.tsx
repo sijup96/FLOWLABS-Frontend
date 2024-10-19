@@ -1,28 +1,25 @@
 import { Outlet } from "react-router-dom";
 import CompanyHeader from "./CompanyHeader";
 import CompanySidebar from "./CompanySidebar";
-import { useEffect, useState } from "react";
-import { company } from "@/api/services/company.service";
+import { useAppDispatch } from "@/redux/store";
+import { useEffect } from "react";
+import { fetchCompanyData } from "@/redux/slices/companySlice";
 
 // Sidebar
 const CompanyLayout = () => {
-    const [domain,setDomain]=useState('')
-
-    const fetchDomainName=async()=>{
-        const data= await company.getDomainName()
-        setDomain(data)
-    }
-    useEffect(()=>{
-        fetchDomainName()
-        
-    },[])
+  const dispatch=useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchCompanyData());
+  }, [dispatch]);
   return (
     <div className="flex">
-      <CompanySidebar domain={domain}/>
-      <div className="w-full"><CompanyHeader domain={domain}/>
-      <menu className="bg-gray-600 min-h-screen">
-        <Outlet />
-      </menu></div>
+      <CompanySidebar />
+      <div className="w-full">
+        <CompanyHeader />
+        <menu className="bg-gray-600 min-h-screen">
+          <Outlet />
+        </menu>
+      </div>
     </div>
   );
 };

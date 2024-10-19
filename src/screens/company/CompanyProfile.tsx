@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/Textarea";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import ConfirmationDialog from "@/components/company/ConfirmationDialog";
 import toast, { Toaster } from "react-hot-toast";
+import { fieldValidation } from "@/utils/validation";
 
 export interface CompanyInfo {
   companyName: string;
@@ -53,7 +54,12 @@ const CompanyProfile = () => {
   });
   const [initialInfo, setInitialInfo] = useState<CompanyInfo>(info);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedFile,setSelectedFile]=useState<File|null>()
+  const [selectedFile, setSelectedFile] = useState<File | null>();
+  const [errors, setErrors] = useState({
+    phoneError: "",
+    foundedDateError: "",
+    descriptionError: "",
+  });
 
   const fetchCompanyInfo = async () => {
     try {
@@ -77,12 +83,32 @@ const CompanyProfile = () => {
   ) => {
     const { name, value } = e.target;
     setInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
+    let errorMessage = "";
+    switch (name) {
+      case "phone":
+        errorMessage = fieldValidation.phone(value)
+          ? ""
+          : "Invalid phone number.";
+        setErrors((prev) => ({ ...prev, phoneError: errorMessage }));
+        break;
+      case "foundedDate":
+        errorMessage = fieldValidation.foundedDate(value)
+          ? ""
+          : "Date must be less than Today.";
+        setErrors((prev) => ({ ...prev, foundedDateError: errorMessage }));
+        break;
+      case "description":
+        errorMessage = fieldValidation.description(value)
+          ? ""
+          : "Description length between 3 to 10";
+        setErrors((prev) => ({ ...prev, descriptionError: errorMessage }));
+    }
   };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file)
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setInfo((prevInfo) => ({ ...prevInfo, logo: reader.result as string }));
@@ -131,12 +157,13 @@ const CompanyProfile = () => {
   const closeDialog = () => {
     setDialogConfig({ ...dialogConfig, isOpen: false });
   };
-  const handleUpload = async(e: React.FormEvent) => {
+  const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(!selectedFile) return 
-    const formData=new FormData()
-    formData.append('company_logo',selectedFile)
-    await company.updateCompanyLogo(formData)
+    if (!selectedFile) return;
+    const formData = new FormData();
+    formData.append("company_logo", selectedFile);
+    toast.success("Updating... please wait.");
+    await company.updateCompanyLogo(formData);
     toast.success("File uploaded successfully");
   };
   return isLoading ? (
@@ -204,6 +231,7 @@ const CompanyProfile = () => {
                     value={info.phone}
                     onChange={handleChange}
                   />
+                  <p className="text-red-600">{errors.phoneError}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -236,6 +264,7 @@ const CompanyProfile = () => {
                       onChange={handleChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     />
+                    <p className="text-red-600">{errors.foundedDateError}</p>
                   </div>
                 </div>
               </div>
@@ -302,6 +331,7 @@ const CompanyProfile = () => {
               onChange={handleChange}
               rows={6}
             />
+            <p className="text-red-600">{errors.descriptionError}</p>
           </div>
 
           <div className="mt-8 flex justify-center">

@@ -1,7 +1,16 @@
+import { ICompanyProps } from "@/interface/company/I_company";
+import { useAppSelector } from "@/redux/store";
+import { AvatarIcon } from "@radix-ui/react-icons";
 import { Bell, Mail, Menu, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const CompanyHeader = ({domain}:{domain:string}) => {
+const CompanyHeader = () => {
+  const {data,loading}=useAppSelector((state)=>state.company)
+  const [companyInfo,setCompanyInfo]=useState<ICompanyProps|null>()
+  useEffect(()=>{
+    setCompanyInfo(data)
+  },[data])
   return (
     <div className=" w-full">
       <header className="bg-white shadow p-4 flex justify-between items-center">
@@ -18,11 +27,15 @@ const CompanyHeader = ({domain}:{domain:string}) => {
         </div>
         <div className="flex items-center space-x-4">
           <Bell className="text-red-600 cursor-pointer" />
-          <Mail className="text-red-600 cursor-pointer"/>
-          <Link to={`/c/${domain}/profile`}>
-          <div className="w-8 h-8 bg-gray-300 rounded-full cursor-pointer">
-            
-          </div>
+          <Mail className="text-red-600 cursor-pointer" />
+          <Link to={`/c/${companyInfo?.companySlug}/profile`}>
+            <div className="w-8 h-8 rounded-full cursor-pointer">
+              {loading ? (
+                <AvatarIcon className="w-8 h-8" />
+              ) : (
+                <img src={companyInfo?.logo} alt="" />
+              )}
+            </div>
           </Link>
         </div>
       </header>

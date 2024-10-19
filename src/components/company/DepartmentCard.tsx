@@ -1,11 +1,10 @@
 import React from 'react';
 
 interface Department {
-  id: number;
-  name: string;
+  _id: string;
+  departmentName: string;
   description: string;
   status: 'active' | 'inactive'
-  departmentHead: string;
 }
 
 interface DepartmentCardProps {
@@ -15,17 +14,13 @@ interface DepartmentCardProps {
 
 const DepartmentCard: React.FC<DepartmentCardProps> = ({ department, children }) => {
   return (
-    <div className="bg-white shadow-md p-4 rounded-md flex justify-between items-center">
+    <div className="bg-slate-300 shadow-md p-4 rounded-md flex justify-between items-center"key={department._id}>
       <div>
-        <h2 className="text-lg font-bold">{department.name}</h2>
+        <h2 className="text-lg font-bold">{department.departmentName}</h2>
         <p>{department.description}</p>
         <p>
           <span className="font-semibold">Status: </span>
           {department.status}
-        </p>
-        <p>
-          <span className="font-semibold">Department Head: </span>
-          {department.departmentHead}
         </p>
       </div>
       <div>{children}</div>
