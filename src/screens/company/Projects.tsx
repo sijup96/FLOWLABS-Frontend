@@ -12,7 +12,7 @@ const Projects = () => {
     <div>
      <div className='bg-gray-300 flex justify-between p-4'>
       <h1 className='font-extrabold'>Projects</h1>
-      <Link to={`/c/${domain}/project/create`}>
+      <Link to={`/c/${domain}/projects/create`}>
       <Button>Create new Projects</Button>
       </Link>
       </div>

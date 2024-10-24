@@ -1,30 +1,24 @@
 import React from "react"
-import { cn } from "@/lib/utils"
+// import { cn } from "@/lib/utils"
 
-interface ShimmerProps extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string
-  width?: string
-  height?: string
-}
+// interface ShimmerProps extends React.HTMLAttributes<HTMLDivElement> {
+//   className?: string
+//   width?: string
+//   height?: string
+// }
 
-const Shimmer: React.FC<ShimmerProps> = ({
-  className,
-  width = "w-full",
-  height = "h-6",
-  ...props
+export const Shimmer: React.FC<{ width?: string; height?: string; className?: string }> = ({
+  width = 'w-full',
+  height = 'h-6',
+  className = '',
 }) => {
   return (
     <div
-      className={cn(
-        "animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:400%_100%] rounded",
-        width,
-        height,
-        className
-      )}
-      {...props}
-    />
-  )
-}
+      className={`${width} ${height} bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-[length:200%_100%] animate-shimmer rounded ${className}`}
+    ></div>
+  );
+};
+
 
 const ShimmerCard: React.FC = () => {
   return (
@@ -112,5 +106,33 @@ const ShimmerUI: React.FC = () => {
     </div>
   )
 }
+export const ShimmerSidebar: React.FC = () => {
+  return (
+    <div className="bg-gray-800 text-white min-h-screen p-4">
+      {/* Shimmer for the company logo */}
+      <div className="mb-8">
+        <Shimmer width="w-3/4" height="h-8" className="rounded-md" />
+      </div>
 
-export { Shimmer, ShimmerCard, ShimmerList, ShimmerTable, ShimmerUI }
+      {/* Shimmer for menu items */}
+      <div className="space-y-2">
+        {[...Array(8)].map((_, index) => (
+          <div
+            key={index}
+            className="flex items-center py-2 space-x-2 rounded border-y border-red-900"
+          >
+            {/* Shimmer for the icon */}
+            <div className="w-10 h-10 bg-gray-200 rounded-full animate-shimmer bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-[length:200%_100%]" />
+            
+            {/* Shimmer for the text */}
+            <div className="w-3/4 h-6 bg-gray-200 rounded-md animate-shimmer bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-[length:200%_100%]" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+
+export { ShimmerCard, ShimmerList, ShimmerTable, ShimmerUI }

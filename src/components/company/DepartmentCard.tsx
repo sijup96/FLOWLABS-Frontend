@@ -4,7 +4,7 @@ interface Department {
   _id: string;
   departmentName: string;
   description: string;
-  status: 'active' | 'inactive'
+  status: 'Active' | 'Inactive'
 }
 
 interface DepartmentCardProps {

@@ -13,7 +13,7 @@ interface DepartmentProps {
   _id: string;
   departmentName: string;
   description: string;
-  status: "active" | "inactive";
+  status: "Active" | "Inactive";
 }
 
 const Departments = () => {
@@ -23,7 +23,7 @@ const Departments = () => {
   const [newDepartment, setNewDepartment] = useState({
     departmentName: "",
     description: "",
-    status: "active",
+    status: "Active",
   });
   const [error, setError] = useState({
     departmentNameError: "",
@@ -37,10 +37,16 @@ const Departments = () => {
   };
   useEffect(() => {
     fetchAlldepartments();
-  }, []);
+  }, [isModalOpen]);
   // Toggle Modal
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+    if (!isModalOpen)
+      setNewDepartment({
+        departmentName: "",
+        description: "",
+        status: "Active",
+      });
   };
 
   // Handle form input changes
@@ -179,8 +185,8 @@ const Departments = () => {
                 className="w-full border border-gray-300 p-2 rounded-md"
                 required
               >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
               </select>
             </div>
 

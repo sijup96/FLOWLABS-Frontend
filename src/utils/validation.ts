@@ -45,5 +45,13 @@ export const fieldValidation = {
     const foundedDate=new Date(date)
     const currentDate=new Date()
     return currentDate>foundedDate
+  },
+  projectName:(name:string)=>{
+    const projectregex=/^[a-zA-Z0-9][a-zA-Z0-9\s\-_.]{1,48}[a-zA-Z0-9]$/
+    return projectregex.test(name)
+  },
+  projectDescription:(description:string)=>{
+    const descriptionRegex=/^[\w\s.,'"\-()?!]{10,500}$/
+    return descriptionRegex.test(description)
   }
 };

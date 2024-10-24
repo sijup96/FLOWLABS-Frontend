@@ -26,7 +26,7 @@ const CompanyRoutes = () => {
             <Route path="/profile" element={<CompanyProfile />} />
 
             <Route path="/projects" element={<Projects />} />
-            <Route path="/project/create" element={<CreateNewProject />} />
+            <Route path="/projects/create" element={<CreateNewProject />} />
 
             <Route path="/departments" element={<Departments />} />
             <Route path="/departments/:id/edit" element={<DepartmentEdit />} />

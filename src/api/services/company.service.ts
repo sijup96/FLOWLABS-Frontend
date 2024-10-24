@@ -11,6 +11,7 @@ export const company = {
     const response = await axiosReq.post(companyEndPoints.login, body);
     return response.data;
   },
+  logout: async () => await axiosReq.post(companyEndPoints.logout),
   resetPassword: async (body: { password: string; domainName: string }) => {
     await axiosReq.put(companyEndPoints.resetPassword, body);
   },

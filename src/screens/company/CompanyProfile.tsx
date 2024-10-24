@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { company } from "@/api/services/company.service";
-import { Button } from "@/components/ui/button";
+import { Button, Button2 } from "@/components/ui/button";
 import { Input3 } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import ConfirmationDialog from "@/components/company/ConfirmationDialog";
 import toast, { Toaster } from "react-hot-toast";
 import { fieldValidation } from "@/utils/validation";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/redux/store";
 
 export interface CompanyInfo {
   companyName: string;
@@ -27,6 +29,8 @@ export interface CompanyInfo {
 }
 
 const CompanyProfile = () => {
+  const navigate = useNavigate();
+  const { data } = useAppSelector((state) => state.company);
   const [info, setInfo] = useState<CompanyInfo>({
     companyName: "",
     companySlug: "",
@@ -137,7 +141,6 @@ const CompanyProfile = () => {
       cancelText: "Cancel",
       onConfirm: async () => {
         if (Object.keys(updatedFields).length > 0) {
-          console.log("Updating with the following fields:", updatedFields);
           try {
             await company.updateCompany(updatedFields);
             // Optionally, you can update the initialInfo state to reflect the changes
@@ -157,6 +160,7 @@ const CompanyProfile = () => {
   const closeDialog = () => {
     setDialogConfig({ ...dialogConfig, isOpen: false });
   };
+  // Upload Logo
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedFile) return;
@@ -166,12 +170,31 @@ const CompanyProfile = () => {
     await company.updateCompanyLogo(formData);
     toast.success("File uploaded successfully");
   };
+  // Handle Logout
+  const handleLogout = async () => {
+    setDialogConfig({
+      isOpen: true,
+      title: "Are you sure?",
+      message: "Are you sure, You want to logout?",
+      confirmText: "Yes, Logout!",
+      cancelText: "Cancel",
+      onConfirm: async () => {
+        await company.logout();
+        navigate(`/c/${data?.companySlug}/login`);
+      },
+    });
+  };
   return isLoading ? (
     <LoadingSpinner />
   ) : (
     <div className="min-h-screen bg-gray-600 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-slate-200 shadow-xl rounded-lg overflow-hidden">
         <div className="p-8">
+          <div className="text-end">
+            <Button2 className="hover:bg-red-700" onClick={handleLogout}>
+              Logout
+            </Button2>
+          </div>
           <div className="flex flex-col items-center text-center space-y-4 mb-8">
             <div className="relative">
               <img

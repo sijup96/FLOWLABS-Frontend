@@ -18,6 +18,7 @@ export const isLoggedIn = "/isLoggedIn";
 
 export const companyEndPoints = {
   login: "company/login",
+  logout:"company/logout",
   isLoggedIn: "/company/isLoggedIn",
   resetPassword: "/company/resetPassword",
   getDomainName: "/getDomainName",
@@ -29,6 +30,9 @@ export const companyEndPoints = {
   getDepartmentInfo: "company/getDepartmentInfo",
   updateDepartment: "/company/updateDepartment",
 };
+export const companyProjectEndPoints={
+  create:'/company/project/create'
+}
 export const employeeEndPoints = {
   add: "employee/add",
 };
